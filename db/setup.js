@@ -79,7 +79,7 @@ const initDb = async () => {
     } catch(err) {
         throw Error(err);
     }
-    db.defaults({ cities: [], pharms: [] }).write();
+    db.defaults({ cities: [], pharms: [], updates: [] }).write();
     return db;
 };
 
@@ -92,9 +92,6 @@ const setCities = async(db) => {
     }
 };
 
-//Before I continue to create function of setPharms I want to check I am able to present 
-// all the related pharms 
-
 const setupPharms = (db) => {
     const pharm = db.get('pharms');
     let date = new Date();
@@ -104,7 +101,6 @@ const setupPharms = (db) => {
         }
     }
 };
-
 
 const setInfrastarcture = async() => {
     await initDb();

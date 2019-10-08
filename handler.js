@@ -1,11 +1,12 @@
-
 const Markup = require('telegraf/markup')
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 const adapter = new FileSync('db/db.json');
 const db = low(adapter);
 
-
+/*
+* This function gets all available cities in the db and builds the Markup menu
+*/
 const cityMarkup = () => {
     const cities = db.get('cities').value();
     let arr = [];
@@ -15,6 +16,10 @@ const cityMarkup = () => {
     return Markup.inlineKeyboard(arr, { columns: 2 });
 };
 
+/*
+* This function gets cityId (Integer), with this id the function searchs for pharms in the chosen city
+* and the returned value is a Markup menu of all pharms in the chosen city
+*/
 const pharmaMarkup = (cityId) => {
     const pharms = db.get('pharms').filter({ cityId }).value();//Gets all pharms of requested city
     let arr = [];
@@ -24,19 +29,24 @@ const pharmaMarkup = (cityId) => {
     return Markup.inlineKeyboard(arr, { columns: 1 });
 }
 
+/*
+* This function builds the supply Markup menu
+*/
 const supplyMarkup = (id) => {
     let pharma =  db.get('pharms').find({ id }).value();
     let arr = [];
     for(key in pharma.supply) {
-        arr.push(`${key}-indica`);
-        arr.push(`${key}-sativa`);
+        arr.push(Markup.callbackButton(`${key}-indica`,`update:${id}${key}-`));
+        arr.push(Markup.callbackButton(`${key}-sativa`,`update:${id}${key}+`));
     }
-    return Markup.keyboard(arr, { columns: 2 });
+    return Markup.inlineKeyboard(arr, { columns: 2 });
 }
-
+/*
+* This function gets a pharma id, And returns a string contains all the necessary information about the pharmas
+*/
 const getPharmReply = (id) => {
     let pharma =  db.get('pharms').find({ id }).value();
-    let pharmaTxt = `${pharma.name} \n  כתובת: ${pharma.address} \n  טלפון: ${pharma.phone}\n  מלאי: \n`;
+    let pharmaTxt = `<b>${pharma.name}</b> \n  כתובת: ${pharma.address} \n  טלפון: ${pharma.phone}\n  מלאי: \n`;
     for(key in pharma.supply) {
         let parts = key.toUpperCase().split('C');
         pharmaTxt += parts[0] + '/C' + parts[1] + ": \n";
@@ -55,13 +65,23 @@ const getPharmReply = (id) => {
     }
 
     pharmaTxt += '*ממליץ בנוסף להתקשר לוודא שהמלאי אכן מעודכן כראוי, ואם כבר התקשרת אז תעדכן בבוט (;\n';
-    let updateMarkup = Markup.inlineKeyboard([Markup.callbackButton('עדכן מלאי', `update:${pharma.id}`)]);
+    let updateMarkup = Markup.inlineKeyboard([Markup.callbackButton('עדכן מלאי', `supply:${pharma.id}`)]);
     return { txt : pharmaTxt, markup : updateMarkup}
 }
+
+/*
+* This function gets a message, and saves the text of the message, date and username to the db.
+*/
+const saveUpdate = (message) => {
+    db.get('updates')
+        .push({message : message.text, time : message.date, user : message.from.username })
+        .write();
+};
 
 module.exports = {
     cityMarkup,
     pharmaMarkup,
     getPharmReply,
-    supplyMarkup
+    supplyMarkup,
+    saveUpdate
 };

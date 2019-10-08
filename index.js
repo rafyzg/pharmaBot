@@ -14,7 +14,7 @@ const pharmaBot = new Router(({ callbackQuery}) => {
     return {
         route : parts[0],
         state : {
-            id : parseInt(parts[1], 10) || 0 
+            id : parseInt(parts[1], 10) || 0
         }
     }
 });
@@ -29,15 +29,19 @@ pharmaBot.on('city', (ctx) => {
 pharmaBot.on('pharma', (ctx) => {
     const pharma = handler.getPharmReply(ctx.state.id); //Getting information of chosen pharma
     
-    return ctx.reply(pharma.txt, Extra.markup(pharma.markup));
+    return ctx.reply(pharma.txt, Extra.HTML().markup(pharma.markup));
 });
-//Update supply
-pharmaBot.on('update', (ctx) => {
-    let supplyMarkup = handler.supplyMarkup(ctx.state.id);
-    return ctx.reply('בחר:',Extra.markup(supplyMarkup))
+//Show supply update options
+pharmaBot.on('supply', (ctx) => {
+    //let supplyMarkup = handler.supplyMarkup(ctx.state.id);
+    return ctx.answerCbQuery('לעדכון מלאי נא לרשום(בהודעה אחת) את העיר, שם בית המרקחת ומה זמין במלאי\nתודה רבה!', true)
+    .then(() => ctx.editMessageText('לעדכון מלאי נא לרשום(בהודעה אחת) את העיר, שם בית המרקחת ומה זמין במלאי\nתודה רבה!'))
 });
-
 
 bot.start((ctx) => ctx.reply('בחר עיר:', Extra.markup(cityMarkup))); //Just started conversation
 bot.on('callback_query', pharmaBot);
+bot.on('text', (ctx) => { //Update received
+    handler.saveUpdate(ctx.message);
+    ctx.reply('🤘');
+});
 bot.launch();
