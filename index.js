@@ -2,8 +2,8 @@ const Telegraf = require('telegraf')
 const Router = require('telegraf/router')
 const Extra = require('telegraf/extra')
 const handler = require('./handler')
-
-const bot = new Telegraf(process.env.BOT_TOKEN);
+const token = process.env.BOT_TOKEN || '943452347:AAFc2b10bAlVfWQLuYUpAyUhZHEvttFhYPE';
+const bot = new Telegraf(token);
 const cityMarkup = handler.cityMarkup();
 
 //Router middleware for all Callback requests
