@@ -2,7 +2,7 @@ const Telegraf = require('telegraf')
 const Router = require('telegraf/router')
 const Extra = require('telegraf/extra')
 const handler = require('./handler')
-const token = process.env.BOT_TOKEN || '943452347:AAFc2b10bAlVfWQLuYUpAyUhZHEvttFhYPE';
+const token = process.env.BOT_TOKEN;
 const bot = new Telegraf(token);
 const cityMarkup = handler.cityMarkup();
 
