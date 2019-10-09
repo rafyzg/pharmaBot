@@ -6,6 +6,7 @@ const handler = require('./handler')
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const cityMarkup = handler.cityMarkup();
 
+//Router middleware for all Callback requests
 const pharmaBot = new Router(({ callbackQuery}) => {
     if(!callbackQuery.data) {
         return 
@@ -33,7 +34,6 @@ pharmaBot.on('pharma', (ctx) => {
 });
 //Show supply update options
 pharmaBot.on('supply', (ctx) => {
-    //let supplyMarkup = handler.supplyMarkup(ctx.state.id);
     return ctx.answerCbQuery('לעדכון מלאי נא לרשום(בהודעה אחת) את העיר, שם בית המרקחת ומה זמין במלאי\nתודה רבה!', true)
     .then(() => ctx.editMessageText('לעדכון מלאי נא לרשום(בהודעה אחת) את העיר, שם בית המרקחת ומה זמין במלאי\nתודה רבה!'))
 });

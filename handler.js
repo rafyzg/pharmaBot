@@ -28,28 +28,15 @@ const pharmaMarkup = (cityId) => {
     }
     return Markup.inlineKeyboard(arr, { columns: 1 });
 }
-
-/*
-* This function builds the supply Markup menu
-*/
-const supplyMarkup = (id) => {
-    let pharma =  db.get('pharms').find({ id }).value();
-    let arr = [];
-    for(key in pharma.supply) {
-        arr.push(Markup.callbackButton(`${key}-indica`,`update:${id}${key}-`));
-        arr.push(Markup.callbackButton(`${key}-sativa`,`update:${id}${key}+`));
-    }
-    return Markup.inlineKeyboard(arr, { columns: 2 });
-}
 /*
 * This function gets a pharma id, And returns a string contains all the necessary information about the pharmas
 */
 const getPharmReply = (id) => {
-    let pharma =  db.get('pharms').find({ id }).value();
-    let pharmaTxt = `<b>${pharma.name}</b> \n  כתובת: ${pharma.address} \n  טלפון: ${pharma.phone}\n  מלאי: \n`;
+    let pharma =  db.get('pharms').find({ id }).value(); //Find the requested pharma
+    let pharmaTxt = `<b>${pharma.name}</b> \n  כתובת: ${pharma.address} \n  טלפון: ${pharma.phone}\n  מלאי: \n`; //print the generic info
     for(key in pharma.supply) {
         let parts = key.toUpperCase().split('C');
-        pharmaTxt += parts[0] + '/C' + parts[1] + ": \n";
+        pharmaTxt += parts[0] + '/C' + parts[1] + ": \n"; //print cannabis category properly
         if(pharma.supply[key].sativa !== '' && pharma.supply[key].indica !== '') {
             pharmaTxt += `סאטיבה: ✅ ${pharma.supply[key].sativa} \nאינדיקה: ✅ ${pharma.supply[key].indica}`;
         }
@@ -64,11 +51,10 @@ const getPharmReply = (id) => {
         }
     }
 
-    pharmaTxt += '*ממליץ בנוסף להתקשר לוודא שהמלאי אכן מעודכן כראוי, ואם כבר התקשרת אז תעדכן בבוט (;\n';
-    let updateMarkup = Markup.inlineKeyboard([Markup.callbackButton('עדכן מלאי', `supply:${pharma.id}`)]);
+    pharmaTxt += '*ממליץ בנוסף להתקשר לוודא שהמלאי אכן מעודכן כראוי, ואם כבר התקשרת אז תעדכן בבוט (;\n לחזרה לתפריט הראשי הקלד /start';
+    let updateMarkup = Markup.inlineKeyboard([Markup.callbackButton('עדכן מלאי', `supply:${pharma.id}`)]); //update button markup
     return { txt : pharmaTxt, markup : updateMarkup}
 }
-
 /*
 * This function gets a message, and saves the text of the message, date and username to the db.
 */
@@ -77,6 +63,18 @@ const saveUpdate = (message) => {
         .push({message : message.text, time : message.date, user : message.from.username })
         .write();
 };
+/*
+* This function builds the supply Markup menu
+*/
+const supplyMarkup = (id) => {
+    let pharma =  db.get('pharms').find({ id }).value();
+    let arr = [];
+    for(key in pharma.supply) {
+        arr.push(Markup.callbackButton(`${key}-indica`,`update:${id}${key}-`));
+        arr.push(Markup.callbackButton(`${key}-sativa`,`update:${id}${key}+`));
+    }
+    return Markup.inlineKeyboard(arr, { columns: 2 });
+}
 
 module.exports = {
     cityMarkup,

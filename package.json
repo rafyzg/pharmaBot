@@ -1,0 +1,26 @@
+{
+  "name": "pharmabot",
+  "version": "1.0.0",
+  "description": "Telegram bot for checking cannabis supply",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rafyzg/pharmaBot.git"
+  },
+  "keywords": [
+    "telegram"
+  ],
+  "author": "Rafael Yzg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rafyzg/pharmaBot/issues"
+  },
+  "homepage": "https://github.com/rafyzg/pharmaBot#readme",
+  "dependencies": {
+    "lowdb": "^1.0.0",
+    "telegraf": "^3.32.0"
+  }
+}
