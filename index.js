@@ -2,19 +2,9 @@ const Telegraf = require('telegraf')
 const Router = require('telegraf/router')
 const Extra = require('telegraf/extra')
 const handler = require('./handler')
-const express = require('express')
-const expressApp = express()
-const token = process.env.BOT_TOKEN
-const bot = new Telegraf(token)
-const port = process.env.PORT || 3000
+const TOKEN = process.env.BOT_TOKEN;
+const bot = new Telegraf(TOKEN)
 const cityMarkup = handler.cityMarkup()
-
-expressApp.get('/', (req, res) => {
-    res.send('Every thing is running')
-})
-expressApp.listen(port, () => {
-    console.log(`Listening on port ${port}`)
-})
 
 //Router middleware for all Callback requests
 const pharmaBot = new Router(({ callbackQuery}) => {
@@ -55,4 +45,3 @@ bot.on('text', (ctx) => { //Update received
     ctx.reply('🤘');
 });
 bot.launch();
-bot.startPolling()

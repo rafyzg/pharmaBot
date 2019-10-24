@@ -4,6 +4,8 @@
   "description": "Telegram bot for checking cannabis supply",
   "main": "index.js",
   "scripts": {
+    "build" : "node db/setup.js",
+    "start" : "node db/setup.js && node index.js ",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -11,7 +13,8 @@
     "url": "git+https://github.com/rafyzg/pharmaBot.git"
   },
   "keywords": [
-    "telegram"
+    "telegram",
+    "bot"
   ],
   "author": "Rafael Yzg",
   "license": "ISC",
